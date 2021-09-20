@@ -8,6 +8,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/rexrecio/dasgo"
 )
 
@@ -20,12 +21,15 @@ func main() {
 		s.Push(testValue)
 	}
 	fmt.Println("The stack size is ", s.Count())
-	var returnvalue interface{}  //we'll use interface{} until generics come to Go
+	var returnvalue interface{} //we'll use interface{} until generics come to Go
+	var v int
 	for !s.IsEmpty() {
 		returnvalue = s.Pop()
 		//Use assertion to retrieve value from interface{}
-		fmt.Println(*returnvalue.(*int), "popped out of the stack")
+		v = *returnvalue.(*int)
+		fmt.Println(v, "popped out of the stack")
 	}
 	fmt.Println("The stack size is ", s.Count())
 }
+
 ```
