@@ -20,7 +20,7 @@ func main() {
 		s.Push(testValue)
 	}
 	fmt.Println("The stack size is ", s.Count())
-	var returnvalue interface{}  //we'll use interface{} until generics come to go
+	var returnvalue interface{}  //we'll use interface{} until generics come to Go
 	for !s.IsEmpty() {
 		returnvalue = s.Pop()
 		fmt.Println(*returnvalue.(*int), "popped out of the stack")
