@@ -98,9 +98,26 @@ func main() {
 
 ## Local Demo
 
+The demo app lives in the nested module at `cmd/demo` and shows usage of all included packages:
+
+- `linkedlist`
+- `bst`
+- `stack`
+- `queue`
+
+Run it from the demo directory:
+
 ```bash
-go run ./cmd/demo
+cd cmd/demo
+go run .
 ```
+
+The demo prints example output for:
+
+- linked list insertion, lookup, and delete
+- binary search tree insertion, traversal, lookup, and delete
+- stack push, peek, and pop
+- queue enqueue, peek, and dequeue
 
 ## Test
 
