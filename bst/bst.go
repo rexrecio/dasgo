@@ -1,6 +1,9 @@
 package bst
 
-import "cmp"
+import (
+	"cmp"
+	"sync"
+)
 
 type Node[T cmp.Ordered] struct {
 	Value T
@@ -9,6 +12,7 @@ type Node[T cmp.Ordered] struct {
 }
 
 type BinarySearchTree[T cmp.Ordered] struct {
+	mu   sync.RWMutex
 	root *Node[T]
 	size int
 }
@@ -18,14 +22,21 @@ func New[T cmp.Ordered]() *BinarySearchTree[T] {
 }
 
 func (t *BinarySearchTree[T]) IsEmpty() bool {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	return t.size == 0
 }
 
 func (t *BinarySearchTree[T]) Len() int {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	return t.size
 }
 
 func (t *BinarySearchTree[T]) Insert(value T) bool {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
 	if t.root == nil {
 		t.root = &Node[T]{Value: value}
 		t.size++
@@ -59,6 +70,9 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 }
 
 func (t *BinarySearchTree[T]) Find(value T) *Node[T] {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
+
 	curr := t.root
 	for curr != nil {
 		if value < curr.Value {
@@ -75,6 +89,9 @@ func (t *BinarySearchTree[T]) Find(value T) *Node[T] {
 }
 
 func (t *BinarySearchTree[T]) Delete(value T) bool {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
 	var deleted bool
 	t.root, deleted = deleteNode(t.root, value)
 	if deleted {
@@ -118,6 +135,9 @@ func deleteNode[T cmp.Ordered](node *Node[T], value T) (*Node[T], bool) {
 }
 
 func (t *BinarySearchTree[T]) Values() []T {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
+
 	values := make([]T, 0, t.size)
 	var walk func(node *Node[T])
 	walk = func(node *Node[T]) {
