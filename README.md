@@ -32,9 +32,21 @@ func main() {
 	list := linkedlist.New[string]()
 	list.Append("alpha")
 	list.Prepend("zero")
+	front, _ := list.Front()
+	fmt.Println(front)         // zero
 	fmt.Println(list.Values()) // [zero alpha]
+
+	_ = list.FindFunc(func(v string) bool {
+		return len(v) > 4
+	})
 }
 ```
+
+Linked list API highlights:
+
+- `Find(value T)` and `Delete(value T)` for value-based behavior
+- `FindFunc(match func(T) bool)` and `DeleteFunc(match func(T) bool)` for custom matching
+- `Front()` and `PopFront()` for efficient head operations
 
 ### Binary Search Tree
 
@@ -68,6 +80,7 @@ import (
 )
 
 func main() {
+	// Stack supports any type parameter (T any).
 	s := stack.New[string]()
 	s.Push("a")
 	s.Push("b")
@@ -88,6 +101,7 @@ import (
 )
 
 func main() {
+	// Queue supports any type parameter (T any).
 	q := queue.New[int]()
 	q.Enqueue(1)
 	q.Enqueue(2)
@@ -130,6 +144,6 @@ go test ./...
 Tag a version so consumers can pin dependencies:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v1.0.4
+git push origin v1.0.4
 ```
