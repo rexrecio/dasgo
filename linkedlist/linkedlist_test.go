@@ -153,3 +153,105 @@ func TestStringValues(t *testing.T) {
 		t.Fatalf("unexpected values after delete: got %v want %v", got, want)
 	}
 }
+
+func TestFront(t *testing.T) {
+	list := New[int]()
+
+	if _, ok := list.Front(); ok {
+		t.Fatal("expected empty list front to fail")
+	}
+
+	list.Append(10)
+	list.Prepend(5)
+
+	v, ok := list.Front()
+	if !ok || v != 5 {
+		t.Fatalf("expected front 5,true got %d,%v", v, ok)
+	}
+}
+
+func TestPopFront(t *testing.T) {
+	list := New[int]()
+
+	if _, ok := list.PopFront(); ok {
+		t.Fatal("expected pop front on empty list to fail")
+	}
+
+	list.Append(1)
+	list.Append(2)
+	list.Append(3)
+
+	v, ok := list.PopFront()
+	if !ok || v != 1 {
+		t.Fatalf("expected first pop front 1,true got %d,%v", v, ok)
+	}
+	v, ok = list.PopFront()
+	if !ok || v != 2 {
+		t.Fatalf("expected second pop front 2,true got %d,%v", v, ok)
+	}
+	v, ok = list.PopFront()
+	if !ok || v != 3 {
+		t.Fatalf("expected third pop front 3,true got %d,%v", v, ok)
+	}
+	if _, ok = list.PopFront(); ok {
+		t.Fatal("expected pop front on empty list to fail")
+	}
+
+	if list.Len() != 0 {
+		t.Fatalf("expected length 0, got %d", list.Len())
+	}
+	if !list.IsEmpty() {
+		t.Fatal("expected list to be empty")
+	}
+}
+
+func TestFindFunc(t *testing.T) {
+	type user struct {
+		ID   int
+		Name string
+	}
+
+	list := New[user]()
+	list.Append(user{ID: 1, Name: "alpha"})
+	list.Append(user{ID: 2, Name: "beta"})
+
+	node := list.FindFunc(func(value user) bool {
+		return value.ID == 2
+	})
+	if node == nil {
+		t.Fatal("expected to find user with ID 2")
+	}
+	if node.Value.Name != "beta" {
+		t.Fatalf("expected matched user beta, got %q", node.Value.Name)
+	}
+}
+
+func TestDeleteFunc(t *testing.T) {
+	type user struct {
+		ID   int
+		Name string
+	}
+
+	list := New[user]()
+	list.Append(user{ID: 1, Name: "alpha"})
+	list.Append(user{ID: 2, Name: "beta"})
+	list.Append(user{ID: 3, Name: "gamma"})
+
+	deleted := list.DeleteFunc(func(value user) bool {
+		return value.ID == 2
+	})
+	if !deleted {
+		t.Fatal("expected delete func to return true")
+	}
+
+	if got, want := list.Values(), []user{{ID: 1, Name: "alpha"}, {ID: 3, Name: "gamma"}}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("unexpected values after delete func: got %v want %v", got, want)
+	}
+
+	deleted = list.DeleteFunc(func(value user) bool {
+		return value.ID == 99
+	})
+	if deleted {
+		t.Fatal("expected delete func to return false for missing item")
+	}
+}

@@ -2,11 +2,11 @@ package queue
 
 import "github.com/rexrecio/dasgo/linkedlist"
 
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	list *linkedlist.SinglyLinkedList[T]
 }
 
-func New[T comparable]() *Queue[T] {
+func New[T any]() *Queue[T] {
 	return &Queue[T]{
 		list: linkedlist.New[T](),
 	}
@@ -25,24 +25,11 @@ func (q *Queue[T]) Enqueue(value T) {
 }
 
 func (q *Queue[T]) Dequeue() (T, bool) {
-	values := q.list.Values()
-	if len(values) == 0 {
-		var zero T
-		return zero, false
-	}
-
-	value := values[0]
-	q.list.Delete(value)
-	return value, true
+	return q.list.PopFront()
 }
 
 func (q *Queue[T]) Peek() (T, bool) {
-	values := q.list.Values()
-	if len(values) == 0 {
-		var zero T
-		return zero, false
-	}
-	return values[0], true
+	return q.list.Front()
 }
 
 func (q *Queue[T]) Values() []T {
