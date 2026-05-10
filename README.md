@@ -1,35 +1,118 @@
 # dasgo
-Fundamental data structures and algorithms in Go.
-## Run unit tests
-`go test -v`
-## Run sample app
+
+Fundamental data structures and algorithms for Go.
+
+## Packages
+
+- `github.com/rexrecio/dasgo/linkedlist`
+- `github.com/rexrecio/dasgo/bst`
+- `github.com/rexrecio/dasgo/stack`
+- `github.com/rexrecio/dasgo/queue`
+
+## Install
+
+```bash
+go get github.com/rexrecio/dasgo@latest
 ```
+
+## Usage
+
+### Linked List
+
+```go
 package main
 
 import (
 	"fmt"
 
-	"github.com/rexrecio/dasgo"
+	"github.com/rexrecio/dasgo/linkedlist"
 )
 
 func main() {
-	var s = new(dasgo.Stack)
-	for i := 0; i < 10; i++ {
-		testValue := new(int)
-		*testValue = i
-		fmt.Println(*testValue, "added to stack")
-		s.Push(testValue)
-	}
-	fmt.Println("The stack size is ", s.Count())
-	var returnvalue interface{} //we'll use interface{} until generics come to Go
-	var v int
-	for !s.IsEmpty() {
-		returnvalue = s.Pop()
-		//Use assertion to retrieve value from interface{}
-		v = *returnvalue.(*int)
-		fmt.Println(v, "popped out of the stack")
-	}
-	fmt.Println("The stack size is ", s.Count())
+	list := linkedlist.New[string]()
+	list.Append("alpha")
+	list.Prepend("zero")
+	fmt.Println(list.Values()) // [zero alpha]
 }
+```
 
+### Binary Search Tree
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/bst"
+)
+
+func main() {
+	tree := bst.New[int]()
+	tree.Insert(10)
+	tree.Insert(3)
+	tree.Insert(20)
+	fmt.Println(tree.Values()) // [3 10 20]
+}
+```
+
+### Stack
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/stack"
+)
+
+func main() {
+	s := stack.New[string]()
+	s.Push("a")
+	s.Push("b")
+	v, _ := s.Pop()
+	fmt.Println(v) // b
+}
+```
+
+### Queue
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/queue"
+)
+
+func main() {
+	q := queue.New[int]()
+	q.Enqueue(1)
+	q.Enqueue(2)
+	v, _ := q.Dequeue()
+	fmt.Println(v) // 1
+}
+```
+
+## Local Demo
+
+```bash
+go run ./cmd/demo
+```
+
+## Test
+
+```bash
+go test ./...
+```
+
+## Release
+
+Tag a version so consumers can pin dependencies:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```
