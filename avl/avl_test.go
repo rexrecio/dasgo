@@ -1,5 +1,4 @@
 package avl
-package avl
 
 import (
 	"math"
