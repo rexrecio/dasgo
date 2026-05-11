@@ -1,3 +1,5 @@
+// Package queue provides a generic, thread-safe FIFO queue backed by a singly-linked list.
+// All public methods are safe for concurrent use by multiple goroutines.
 package queue
 
 import "github.com/rexrecio/dasgo/linkedlist"

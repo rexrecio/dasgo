@@ -1,3 +1,6 @@
+// Package bst provides a generic, thread-safe unbalanced binary search tree.
+// Keys must satisfy [cmp.Ordered]. For a self-balancing alternative see the avl package.
+// All public methods are safe for concurrent use by multiple goroutines.
 package bst
 
 import (

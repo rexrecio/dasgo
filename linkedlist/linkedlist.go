@@ -1,3 +1,5 @@
+// Package linkedlist provides a generic, thread-safe singly-linked list.
+// All public methods are safe for concurrent use by multiple goroutines.
 package linkedlist
 
 import (

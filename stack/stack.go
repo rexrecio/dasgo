@@ -1,3 +1,5 @@
+// Package stack provides a generic, thread-safe LIFO stack backed by a singly-linked list.
+// All public methods are safe for concurrent use by multiple goroutines.
 package stack
 
 import "github.com/rexrecio/dasgo/linkedlist"

@@ -1,3 +1,6 @@
+// Package avl provides a generic, thread-safe AVL tree (self-balancing binary search tree).
+// Keys must satisfy [cmp.Ordered]. Insert, Find, and Delete all run in O(log n) time.
+// All public methods are safe for concurrent use by multiple goroutines.
 package avl
 
 import (
