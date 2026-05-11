@@ -210,12 +210,3 @@ The demo prints example output for:
 ```bash
 go test ./...
 ```
-
-## Release
-
-Tag a version so consumers can pin dependencies:
-
-```bash
-git tag v1.1.0
-git push origin v1.1.0
-```
