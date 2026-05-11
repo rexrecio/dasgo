@@ -31,15 +31,19 @@ import (
 
 func main() {
 	list := linkedlist.New[string]()
-	list.Append("alpha")
-	list.Prepend("zero")
-	front, _ := list.Front()
-	fmt.Println(front)         // zero
-	fmt.Println(list.Values()) // [zero alpha]
 
-	_ = list.FindFunc(func(v string) bool {
-		return len(v) > 4
-	})
+	list.Append("banana")
+	list.Append("cherry")
+	list.Prepend("apple")
+
+	fmt.Println("values:  ", list.Values())
+	fmt.Println("len:     ", list.Len())
+	fmt.Println("empty:   ", list.IsEmpty())
+	_, foundCherry := list.Find("cherry")
+	fmt.Println("find cherry:", foundCherry)
+
+	list.Delete("banana")
+	fmt.Println("after delete banana:", list.Values())
 }
 ```
 
@@ -62,10 +66,20 @@ import (
 
 func main() {
 	tree := bst.New[int]()
-	tree.Insert(10)
-	tree.Insert(3)
-	tree.Insert(20)
-	fmt.Println(tree.Values()) // [3 10 20]
+
+	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
+		tree.Insert(v)
+	}
+
+	fmt.Println("in-order:  ", tree.Values())
+	fmt.Println("len:       ", tree.Len())
+	_, found7 := tree.Find(7)
+	_, found99 := tree.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
+
+	tree.Delete(10)
+	fmt.Println("after delete root 10:", tree.Values())
 }
 ```
 
@@ -82,10 +96,20 @@ import (
 
 func main() {
 	tree := avl.New[int]()
-	tree.Insert(10)
-	tree.Insert(3)
-	tree.Insert(20)
-	fmt.Println(tree.Values()) // [3 10 20]
+
+	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
+		tree.Insert(v)
+	}
+
+	fmt.Println("in-order:  ", tree.Values())
+	fmt.Println("len:       ", tree.Len())
+	_, found7 := tree.Find(7)
+	_, found99 := tree.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
+
+	tree.Delete(10)
+	fmt.Println("after delete root 10:", tree.Values())
 }
 ```
 
@@ -104,12 +128,23 @@ import (
 )
 
 func main() {
-	// Stack supports any type parameter (T any).
-	s := stack.New[string]()
-	s.Push("a")
-	s.Push("b")
-	v, _ := s.Pop()
-	fmt.Println(v) // b
+	s := stack.New[int]()
+
+	s.Push(1)
+	s.Push(2)
+	s.Push(3)
+
+	fmt.Println("values:  ", s.Values())
+	fmt.Println("len:     ", s.Len())
+
+	if v, ok := s.Peek(); ok {
+		fmt.Println("peek:    ", v)
+	}
+
+	for !s.IsEmpty() {
+		v, _ := s.Pop()
+		fmt.Println("pop:", v)
+	}
 }
 ```
 
@@ -125,12 +160,23 @@ import (
 )
 
 func main() {
-	// Queue supports any type parameter (T any).
-	q := queue.New[int]()
-	q.Enqueue(1)
-	q.Enqueue(2)
-	v, _ := q.Dequeue()
-	fmt.Println(v) // 1
+	q := queue.New[string]()
+
+	q.Enqueue("first")
+	q.Enqueue("second")
+	q.Enqueue("third")
+
+	fmt.Println("values:  ", q.Values())
+	fmt.Println("len:     ", q.Len())
+
+	if v, ok := q.Peek(); ok {
+		fmt.Println("peek:    ", v)
+	}
+
+	for !q.IsEmpty() {
+		v, _ := q.Dequeue()
+		fmt.Println("dequeue:", v)
+	}
 }
 ```
 
