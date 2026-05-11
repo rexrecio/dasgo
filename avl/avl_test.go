@@ -172,3 +172,30 @@ func TestBalanceProperty(t *testing.T) {
 		t.Fatalf("tree height %d exceeds AVL bound %d for %d nodes", got, maxHeight, n)
 	}
 }
+
+func TestForEach(t *testing.T) {
+	tree := New[int]()
+	for _, v := range []int{10, 5, 20, 3, 7, 15, 25} {
+		tree.Insert(v)
+	}
+
+	// Full in-order traversal.
+	var got []int
+	tree.ForEach(func(v int) bool {
+		got = append(got, v)
+		return true
+	})
+	if want := []int{3, 5, 7, 10, 15, 20, 25}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ForEach full: got %v want %v", got, want)
+	}
+
+	// Early stop.
+	got = nil
+	tree.ForEach(func(v int) bool {
+		got = append(got, v)
+		return v < 10
+	})
+	if want := []int{3, 5, 7, 10}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ForEach early stop: got %v want %v", got, want)
+	}
+}

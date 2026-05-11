@@ -152,3 +152,18 @@ func (t *BinarySearchTree[T]) Values() []T {
 	walk(t.root)
 	return values
 }
+
+// ForEach calls fn for each value in ascending order. If fn returns false, iteration stops.
+func (t *BinarySearchTree[T]) ForEach(fn func(T) bool) {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
+
+	var walk func(n *node[T]) bool
+	walk = func(n *node[T]) bool {
+		if n == nil {
+			return true
+		}
+		return walk(n.Left) && fn(n.Value) && walk(n.Right)
+	}
+	walk(t.root)
+}

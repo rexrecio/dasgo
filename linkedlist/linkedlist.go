@@ -173,3 +173,15 @@ func (l *SinglyLinkedList[T]) Values() []T {
 	}
 	return values
 }
+
+// ForEach calls fn for each value in list order. If fn returns false, iteration stops.
+func (l *SinglyLinkedList[T]) ForEach(fn func(T) bool) {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+
+	for curr := l.head; curr != nil; curr = curr.Next {
+		if !fn(curr.Value) {
+			return
+		}
+	}
+}

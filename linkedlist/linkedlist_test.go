@@ -255,3 +255,30 @@ func TestDeleteFunc(t *testing.T) {
 		t.Fatal("expected delete func to return false for missing item")
 	}
 }
+
+func TestForEach(t *testing.T) {
+	list := New[int]()
+	for _, v := range []int{1, 2, 3, 4, 5} {
+		list.Append(v)
+	}
+
+	// Full traversal.
+	var got []int
+	list.ForEach(func(v int) bool {
+		got = append(got, v)
+		return true
+	})
+	if want := []int{1, 2, 3, 4, 5}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ForEach full: got %v want %v", got, want)
+	}
+
+	// Early stop after first two.
+	got = nil
+	list.ForEach(func(v int) bool {
+		got = append(got, v)
+		return len(got) < 2
+	})
+	if want := []int{1, 2}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("ForEach early stop: got %v want %v", got, want)
+	}
+}
