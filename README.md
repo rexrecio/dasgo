@@ -170,6 +170,6 @@ go test ./...
 Tag a version so consumers can pin dependencies:
 
 ```bash
-git tag v1.0.4
-git push origin v1.0.4
+git tag v1.1.0
+git push origin v1.1.0
 ```
