@@ -6,6 +6,7 @@ Fundamental data structures and algorithms for Go.
 
 - `github.com/rexrecio/dasgo/linkedlist`
 - `github.com/rexrecio/dasgo/bst`
+- `github.com/rexrecio/dasgo/avl`
 - `github.com/rexrecio/dasgo/stack`
 - `github.com/rexrecio/dasgo/queue`
 
@@ -68,6 +69,29 @@ func main() {
 }
 ```
 
+### AVL Tree
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/avl"
+)
+
+func main() {
+	tree := avl.New[int]()
+	tree.Insert(10)
+	tree.Insert(3)
+	tree.Insert(20)
+	fmt.Println(tree.Values()) // [3 10 20]
+}
+```
+
+The AVL tree is a self-balancing BST with the same API as `bst`. It guarantees
+O(log n) insert, delete, and lookup even for sorted or adversarial input.
+
 ### Stack
 
 ```go
@@ -116,6 +140,7 @@ The demo app lives in the nested module at `cmd/demo` and shows usage of all inc
 
 - `linkedlist`
 - `bst`
+- `avl`
 - `stack`
 - `queue`
 
@@ -130,6 +155,7 @@ The demo prints example output for:
 
 - linked list insertion, lookup, and delete
 - binary search tree insertion, traversal, lookup, and delete
+- AVL tree insertion, traversal, lookup, and delete
 - stack push, peek, and pop
 - queue enqueue, peek, and dequeue
 

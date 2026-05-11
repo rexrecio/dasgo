@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/rexrecio/dasgo/avl"
 	"github.com/rexrecio/dasgo/bst"
 	"github.com/rexrecio/dasgo/linkedlist"
 	"github.com/rexrecio/dasgo/queue"
@@ -12,6 +13,7 @@ import (
 func main() {
 	linkedListDemo()
 	bstDemo()
+	avlDemo()
 	stackDemo()
 	queueDemo()
 }
@@ -38,6 +40,26 @@ func linkedListDemo() {
 func bstDemo() {
 	fmt.Println("=== Binary Search Tree ===")
 	tree := bst.New[int]()
+
+	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
+		tree.Insert(v)
+	}
+
+	fmt.Println("in-order:  ", tree.Values())
+	fmt.Println("len:       ", tree.Len())
+	_, found7 := tree.Find(7)
+	_, found99 := tree.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
+
+	tree.Delete(10)
+	fmt.Println("after delete root 10:", tree.Values())
+	fmt.Println()
+}
+
+func avlDemo() {
+	fmt.Println("=== AVL Tree ===")
+	tree := avl.New[int]()
 
 	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
 		tree.Insert(v)
