@@ -27,7 +27,8 @@ func linkedListDemo() {
 	fmt.Println("values:  ", list.Values())
 	fmt.Println("len:     ", list.Len())
 	fmt.Println("empty:   ", list.IsEmpty())
-	fmt.Println("find cherry:", list.Find("cherry") != nil)
+	_, foundCherry := list.Find("cherry")
+	fmt.Println("find cherry:", foundCherry)
 
 	list.Delete("banana")
 	fmt.Println("after delete banana:", list.Values())
@@ -44,8 +45,10 @@ func bstDemo() {
 
 	fmt.Println("in-order:  ", tree.Values())
 	fmt.Println("len:       ", tree.Len())
-	fmt.Println("find 7:    ", tree.Find(7) != nil)
-	fmt.Println("find 99:   ", tree.Find(99) != nil)
+	_, found7 := tree.Find(7)
+	_, found99 := tree.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
 
 	tree.Delete(10)
 	fmt.Println("after delete root 10:", tree.Values())

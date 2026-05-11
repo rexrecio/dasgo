@@ -42,16 +42,16 @@ func TestFind(t *testing.T) {
 	list.Append(7)
 	list.Append(14)
 
-	node := list.Find(14)
-	if node == nil {
+	v, ok := list.Find(14)
+	if !ok {
 		t.Fatal("expected to find value 14")
 	}
-	if node.Value != 14 {
-		t.Fatalf("expected node value 14, got %d", node.Value)
+	if v != 14 {
+		t.Fatalf("expected value 14, got %d", v)
 	}
 
-	if missing := list.Find(99); missing != nil {
-		t.Fatalf("expected nil for missing value, got %+v", missing)
+	if _, ok := list.Find(99); ok {
+		t.Fatal("expected find of missing value to return false")
 	}
 }
 
@@ -143,7 +143,7 @@ func TestStringValues(t *testing.T) {
 	if got, want := list.Values(), []string{"zero", "alpha", "beta"}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("unexpected string values: got %v want %v", got, want)
 	}
-	if list.Find("alpha") == nil {
+	if _, ok := list.Find("alpha"); !ok {
 		t.Fatal("expected to find alpha")
 	}
 	if deleted := list.Delete("beta"); !deleted {
@@ -215,14 +215,14 @@ func TestFindFunc(t *testing.T) {
 	list.Append(user{ID: 1, Name: "alpha"})
 	list.Append(user{ID: 2, Name: "beta"})
 
-	node := list.FindFunc(func(value user) bool {
+	v, ok := list.FindFunc(func(value user) bool {
 		return value.ID == 2
 	})
-	if node == nil {
+	if !ok {
 		t.Fatal("expected to find user with ID 2")
 	}
-	if node.Value.Name != "beta" {
-		t.Fatalf("expected matched user beta, got %q", node.Value.Name)
+	if v.Name != "beta" {
+		t.Fatalf("expected matched user beta, got %q", v.Name)
 	}
 }
 

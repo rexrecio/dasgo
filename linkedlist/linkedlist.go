@@ -5,15 +5,15 @@ import (
 	"sync"
 )
 
-type Node[T any] struct {
+type node[T any] struct {
 	Value T
-	Next  *Node[T]
+	Next  *node[T]
 }
 
 type SinglyLinkedList[T any] struct {
 	mu   sync.RWMutex
-	head *Node[T]
-	tail *Node[T]
+	head *node[T]
+	tail *node[T]
 	size int
 }
 
@@ -37,7 +37,7 @@ func (l *SinglyLinkedList[T]) Prepend(value T) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	node := &Node[T]{Value: value, Next: l.head}
+	node := &node[T]{Value: value, Next: l.head}
 	l.head = node
 	if l.tail == nil {
 		l.tail = node
@@ -49,7 +49,7 @@ func (l *SinglyLinkedList[T]) Append(value T) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	node := &Node[T]{Value: value}
+	node := &node[T]{Value: value}
 	if l.tail == nil {
 		l.head = node
 		l.tail = node
@@ -62,7 +62,7 @@ func (l *SinglyLinkedList[T]) Append(value T) {
 	l.size++
 }
 
-func (l *SinglyLinkedList[T]) Find(value T) *Node[T] {
+func (l *SinglyLinkedList[T]) Find(value T) (T, bool) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
@@ -80,20 +80,21 @@ func (l *SinglyLinkedList[T]) Delete(value T) bool {
 	})
 }
 
-func (l *SinglyLinkedList[T]) FindFunc(match func(T) bool) *Node[T] {
+func (l *SinglyLinkedList[T]) FindFunc(match func(T) bool) (T, bool) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
 	return l.findFuncNoLock(match)
 }
 
-func (l *SinglyLinkedList[T]) findFuncNoLock(match func(T) bool) *Node[T] {
+func (l *SinglyLinkedList[T]) findFuncNoLock(match func(T) bool) (T, bool) {
 	for curr := l.head; curr != nil; curr = curr.Next {
 		if match(curr.Value) {
-			return curr
+			return curr.Value, true
 		}
 	}
-	return nil
+	var zero T
+	return zero, false
 }
 
 func (l *SinglyLinkedList[T]) DeleteFunc(match func(T) bool) bool {

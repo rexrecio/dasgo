@@ -58,16 +58,16 @@ func TestFind(t *testing.T) {
 	tree.Insert(4)
 	tree.Insert(12)
 
-	node := tree.Find(4)
-	if node == nil {
+	v, ok := tree.Find(4)
+	if !ok {
 		t.Fatal("expected to find value 4")
 	}
-	if node.Value != 4 {
-		t.Fatalf("expected value 4, got %d", node.Value)
+	if v != 4 {
+		t.Fatalf("expected value 4, got %d", v)
 	}
 
-	if missing := tree.Find(999); missing != nil {
-		t.Fatalf("expected nil for missing value, got %+v", missing)
+	if _, ok := tree.Find(999); ok {
+		t.Fatal("expected find of missing value to return false")
 	}
 }
 
@@ -153,7 +153,7 @@ func TestStringValues(t *testing.T) {
 	if got, want := tree.Values(), []string{"apple", "banana", "orange", "pear"}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("unexpected string values: got %v want %v", got, want)
 	}
-	if tree.Find("banana") == nil {
+	if _, ok := tree.Find("banana"); !ok {
 		t.Fatal("expected to find banana")
 	}
 	if deleted := tree.Delete("orange"); !deleted {

@@ -5,15 +5,15 @@ import (
 	"sync"
 )
 
-type Node[T cmp.Ordered] struct {
+type node[T cmp.Ordered] struct {
 	Value T
-	Left  *Node[T]
-	Right *Node[T]
+	Left  *node[T]
+	Right *node[T]
 }
 
 type BinarySearchTree[T cmp.Ordered] struct {
 	mu   sync.RWMutex
-	root *Node[T]
+	root *node[T]
 	size int
 }
 
@@ -38,7 +38,7 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 	defer t.mu.Unlock()
 
 	if t.root == nil {
-		t.root = &Node[T]{Value: value}
+		t.root = &node[T]{Value: value}
 		t.size++
 		return true
 	}
@@ -47,7 +47,7 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 	for {
 		if value < curr.Value {
 			if curr.Left == nil {
-				curr.Left = &Node[T]{Value: value}
+				curr.Left = &node[T]{Value: value}
 				t.size++
 				return true
 			}
@@ -57,7 +57,7 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 
 		if value > curr.Value {
 			if curr.Right == nil {
-				curr.Right = &Node[T]{Value: value}
+				curr.Right = &node[T]{Value: value}
 				t.size++
 				return true
 			}
@@ -69,7 +69,7 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 	}
 }
 
-func (t *BinarySearchTree[T]) Find(value T) *Node[T] {
+func (t *BinarySearchTree[T]) Find(value T) (T, bool) {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
 
@@ -83,9 +83,10 @@ func (t *BinarySearchTree[T]) Find(value T) *Node[T] {
 			curr = curr.Right
 			continue
 		}
-		return curr
+		return curr.Value, true
 	}
-	return nil
+	var zero T
+	return zero, false
 }
 
 func (t *BinarySearchTree[T]) Delete(value T) bool {
@@ -100,7 +101,7 @@ func (t *BinarySearchTree[T]) Delete(value T) bool {
 	return deleted
 }
 
-func deleteNode[T cmp.Ordered](node *Node[T], value T) (*Node[T], bool) {
+func deleteNode[T cmp.Ordered](node *node[T], value T) (*node[T], bool) {
 	if node == nil {
 		return nil, false
 	}
@@ -139,8 +140,8 @@ func (t *BinarySearchTree[T]) Values() []T {
 	defer t.mu.RUnlock()
 
 	values := make([]T, 0, t.size)
-	var walk func(node *Node[T])
-	walk = func(node *Node[T]) {
+	var walk func(node *node[T])
+	walk = func(node *node[T]) {
 		if node == nil {
 			return
 		}
