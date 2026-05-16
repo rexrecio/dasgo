@@ -7,6 +7,7 @@ Fundamental data structures and algorithms for Go.
 - `github.com/rexrecio/dasgo/linkedlist`
 - `github.com/rexrecio/dasgo/bst`
 - `github.com/rexrecio/dasgo/avl`
+- `github.com/rexrecio/dasgo/heap`
 - `github.com/rexrecio/dasgo/stack`
 - `github.com/rexrecio/dasgo/queue`
 
@@ -116,6 +117,58 @@ func main() {
 The AVL tree is a self-balancing BST with the same API as `bst`. It guarantees
 O(log n) insert, delete, and lookup even for sorted or adversarial input.
 
+### Heap
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/heap"
+)
+
+func main() {
+	// Min-heap (default).
+	h := heap.New[int]()
+	h.Push(5)
+	h.Push(1)
+	h.Push(3)
+
+	if v, ok := h.Peek(); ok {
+		fmt.Println("peek:", v) // 1
+	}
+	for !h.IsEmpty() {
+		v, _ := h.Pop()
+		fmt.Println("pop:", v) // 1, 3, 5
+	}
+
+	// Max-heap.
+	mh := heap.NewMax[int]()
+	mh.Push(5)
+	mh.Push(1)
+	mh.Push(3)
+	v, _ := mh.Pop()
+	fmt.Println("max pop:", v) // 5
+
+	// Custom ordering — min-heap by string length.
+	sh := heap.NewFunc(func(a, b string) bool {
+		return len(a) < len(b)
+	})
+	sh.Push("banana")
+	sh.Push("fig")
+	sh.Push("apple")
+	v2, _ := sh.Pop()
+	fmt.Println("shortest:", v2) // fig
+}
+```
+
+Heap constructors:
+
+- `New[T]()` — min-heap using natural ordering (`T` must satisfy `cmp.Ordered`)
+- `NewMax[T]()` — max-heap using natural ordering
+- `NewFunc(less func(a, b T) bool)` — custom ordering, works with any type
+
 ### Stack
 
 ```go
@@ -187,6 +240,7 @@ The demo app lives in the nested module at `cmd/demo` and shows usage of all inc
 - `linkedlist`
 - `bst`
 - `avl`
+- `heap`
 - `stack`
 - `queue`
 
@@ -202,6 +256,7 @@ The demo prints example output for:
 - linked list insertion, lookup, and delete
 - binary search tree insertion, traversal, lookup, and delete
 - AVL tree insertion, traversal, lookup, and delete
+- heap push, peek, and pop (min, max, and custom)
 - stack push, peek, and pop
 - queue enqueue, peek, and dequeue
 
