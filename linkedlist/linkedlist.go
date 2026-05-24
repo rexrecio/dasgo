@@ -12,6 +12,8 @@ type node[T any] struct {
 	Next  *node[T]
 }
 
+// SinglyLinkedList is a generic, thread-safe singly-linked list.
+// All operations are safe for concurrent use.
 type SinglyLinkedList[T any] struct {
 	mu   sync.RWMutex
 	head *node[T]
@@ -19,22 +21,26 @@ type SinglyLinkedList[T any] struct {
 	size int
 }
 
+// New returns an empty SinglyLinkedList.
 func New[T any]() *SinglyLinkedList[T] {
 	return &SinglyLinkedList[T]{}
 }
 
+// IsEmpty reports whether the list contains no elements.
 func (l *SinglyLinkedList[T]) IsEmpty() bool {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 	return l.size == 0
 }
 
+// Len returns the number of elements in the list.
 func (l *SinglyLinkedList[T]) Len() int {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 	return l.size
 }
 
+// Prepend inserts value at the front of the list.
 func (l *SinglyLinkedList[T]) Prepend(value T) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -47,6 +53,7 @@ func (l *SinglyLinkedList[T]) Prepend(value T) {
 	l.size++
 }
 
+// Append inserts value at the back of the list.
 func (l *SinglyLinkedList[T]) Append(value T) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -64,6 +71,8 @@ func (l *SinglyLinkedList[T]) Append(value T) {
 	l.size++
 }
 
+// Find returns the first element that compares equal to value using
+// reflect.DeepEqual, and true. Returns the zero value and false if not found.
 func (l *SinglyLinkedList[T]) Find(value T) (T, bool) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
@@ -73,6 +82,8 @@ func (l *SinglyLinkedList[T]) Find(value T) (T, bool) {
 	})
 }
 
+// Delete removes the first element that compares equal to value using
+// reflect.DeepEqual and returns true. Returns false if no match is found.
 func (l *SinglyLinkedList[T]) Delete(value T) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -82,6 +93,8 @@ func (l *SinglyLinkedList[T]) Delete(value T) bool {
 	})
 }
 
+// FindFunc returns the first element for which match returns true, and true.
+// Returns the zero value and false if no element matches.
 func (l *SinglyLinkedList[T]) FindFunc(match func(T) bool) (T, bool) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
@@ -99,6 +112,8 @@ func (l *SinglyLinkedList[T]) findFuncNoLock(match func(T) bool) (T, bool) {
 	return zero, false
 }
 
+// DeleteFunc removes the first element for which match returns true and returns
+// true. Returns false if no element matches.
 func (l *SinglyLinkedList[T]) DeleteFunc(match func(T) bool) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -136,6 +151,8 @@ func (l *SinglyLinkedList[T]) deleteFuncNoLock(match func(T) bool) bool {
 	return false
 }
 
+// Front returns the first element without removing it, and true.
+// Returns the zero value and false if the list is empty.
 func (l *SinglyLinkedList[T]) Front() (T, bool) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
@@ -147,6 +164,8 @@ func (l *SinglyLinkedList[T]) Front() (T, bool) {
 	return l.head.Value, true
 }
 
+// PopFront removes and returns the first element and true.
+// Returns the zero value and false if the list is empty.
 func (l *SinglyLinkedList[T]) PopFront() (T, bool) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
@@ -165,6 +184,7 @@ func (l *SinglyLinkedList[T]) PopFront() (T, bool) {
 	return value, true
 }
 
+// Values returns all elements in list order as a slice.
 func (l *SinglyLinkedList[T]) Values() []T {
 	l.mu.RLock()
 	defer l.mu.RUnlock()

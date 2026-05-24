@@ -32,12 +32,14 @@ func NewFunc[T any](less func(a, b T) bool) *Heap[T] {
 	return &Heap[T]{less: less}
 }
 
+// Len returns the number of elements in the heap.
 func (h *Heap[T]) Len() int {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	return len(h.data)
 }
 
+// IsEmpty reports whether the heap contains no elements.
 func (h *Heap[T]) IsEmpty() bool {
 	h.mu.RLock()
 	defer h.mu.RUnlock()

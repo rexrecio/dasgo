@@ -14,28 +14,35 @@ type node[T cmp.Ordered] struct {
 	Right *node[T]
 }
 
+// BinarySearchTree is a generic unbalanced binary search tree.
+// All operations are safe for concurrent use.
 type BinarySearchTree[T cmp.Ordered] struct {
 	mu   sync.RWMutex
 	root *node[T]
 	size int
 }
 
+// New returns an empty BinarySearchTree.
 func New[T cmp.Ordered]() *BinarySearchTree[T] {
 	return &BinarySearchTree[T]{}
 }
 
+// IsEmpty reports whether the tree contains no elements.
 func (t *BinarySearchTree[T]) IsEmpty() bool {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
 	return t.size == 0
 }
 
+// Len returns the number of elements in the tree.
 func (t *BinarySearchTree[T]) Len() int {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
 	return t.size
 }
 
+// Insert adds value to the tree and returns true. If value is already present
+// it returns false and the tree is unchanged.
 func (t *BinarySearchTree[T]) Insert(value T) bool {
 	t.mu.Lock()
 	defer t.mu.Unlock()
@@ -72,6 +79,8 @@ func (t *BinarySearchTree[T]) Insert(value T) bool {
 	}
 }
 
+// Find returns the stored value equal to value and true, or the zero value and
+// false if not found.
 func (t *BinarySearchTree[T]) Find(value T) (T, bool) {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
@@ -92,6 +101,8 @@ func (t *BinarySearchTree[T]) Find(value T) (T, bool) {
 	return zero, false
 }
 
+// Delete removes value from the tree and returns true. If value is not present
+// it returns false and the tree is unchanged.
 func (t *BinarySearchTree[T]) Delete(value T) bool {
 	t.mu.Lock()
 	defer t.mu.Unlock()
@@ -138,6 +149,7 @@ func deleteNode[T cmp.Ordered](node *node[T], value T) (*node[T], bool) {
 	return node, true
 }
 
+// Values returns all values in ascending order.
 func (t *BinarySearchTree[T]) Values() []T {
 	t.mu.RLock()
 	defer t.mu.RUnlock()
