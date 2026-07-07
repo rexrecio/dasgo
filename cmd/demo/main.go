@@ -7,6 +7,7 @@ import (
 	"github.com/rexrecio/dasgo/bst"
 	"github.com/rexrecio/dasgo/linkedlist"
 	"github.com/rexrecio/dasgo/queue"
+	"github.com/rexrecio/dasgo/skiplist"
 	"github.com/rexrecio/dasgo/stack"
 )
 
@@ -14,6 +15,7 @@ func main() {
 	linkedListDemo()
 	bstDemo()
 	avlDemo()
+	skipListDemo()
 	stackDemo()
 	queueDemo()
 }
@@ -74,6 +76,26 @@ func avlDemo() {
 
 	tree.Delete(10)
 	fmt.Println("after delete root 10:", tree.Values())
+	fmt.Println()
+}
+
+func skipListDemo() {
+	fmt.Println("=== Skip List ===")
+	list := skiplist.New[int]()
+
+	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
+		list.Insert(v)
+	}
+
+	fmt.Println("ordered:   ", list.Values())
+	fmt.Println("len:       ", list.Len())
+	_, found7 := list.Find(7)
+	_, found99 := list.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
+
+	list.Delete(10)
+	fmt.Println("after delete 10:", list.Values())
 	fmt.Println()
 }
 

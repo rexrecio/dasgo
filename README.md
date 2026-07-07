@@ -7,6 +7,7 @@ Fundamental data structures and algorithms for Go.
 - `github.com/rexrecio/dasgo/linkedlist`
 - `github.com/rexrecio/dasgo/bst`
 - `github.com/rexrecio/dasgo/avl`
+- `github.com/rexrecio/dasgo/skiplist`
 - `github.com/rexrecio/dasgo/heap`
 - `github.com/rexrecio/dasgo/stack`
 - `github.com/rexrecio/dasgo/queue`
@@ -116,6 +117,39 @@ func main() {
 
 The AVL tree is a self-balancing BST with the same API as `bst`. It guarantees
 O(log n) insert, delete, and lookup even for sorted or adversarial input.
+
+### Skip List
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/rexrecio/dasgo/skiplist"
+)
+
+func main() {
+	list := skiplist.New[int]()
+
+	for _, v := range []int{10, 4, 20, 1, 7, 15, 25} {
+		list.Insert(v)
+	}
+
+	fmt.Println("ordered:   ", list.Values())
+	fmt.Println("len:       ", list.Len())
+	_, found7 := list.Find(7)
+	_, found99 := list.Find(99)
+	fmt.Println("find 7:    ", found7)
+	fmt.Println("find 99:   ", found99)
+
+	list.Delete(10)
+	fmt.Println("after delete 10:", list.Values())
+}
+```
+
+The skip list stores unique ordered values and provides expected O(log n) insert,
+delete, and lookup with probabilistic balancing.
 
 ### Heap
 
@@ -240,6 +274,7 @@ The demo app lives in the nested module at `cmd/demo` and shows usage of all inc
 - `linkedlist`
 - `bst`
 - `avl`
+- `skiplist`
 - `heap`
 - `stack`
 - `queue`
@@ -256,6 +291,7 @@ The demo prints example output for:
 - linked list insertion, lookup, and delete
 - binary search tree insertion, traversal, lookup, and delete
 - AVL tree insertion, traversal, lookup, and delete
+- skip list insertion, ordered traversal, lookup, and delete
 - heap push, peek, and pop (min, max, and custom)
 - stack push, peek, and pop
 - queue enqueue, peek, and dequeue
